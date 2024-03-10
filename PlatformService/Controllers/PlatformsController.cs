@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PlatformService.Data.Interfaces;
 using PlatformService.Dtos;
 using PlatformService.Models;
+using PlatformService.SyncDataServices.Http;
 
 namespace PlatformService.Controllers
 {
@@ -11,15 +12,20 @@ namespace PlatformService.Controllers
     public class PlatformsController : ControllerBase
     {
         #region Private Fields
+        private readonly ICommandDataClient _commandDataClient;
         private readonly IPlatformRepository _platformRepository;
         private readonly IMapper _mapper;
         #endregion
 
         #region Constructor
-        public PlatformsController(IPlatformRepository platformRepository, IMapper mapper)
+        public PlatformsController(
+            IPlatformRepository platformRepository,
+            IMapper mapper,
+            ICommandDataClient commandDataClient)
         {
             _platformRepository = platformRepository;
             _mapper = mapper;
+            _commandDataClient = commandDataClient;
         }
         #endregion
 
@@ -44,7 +50,7 @@ namespace PlatformService.Controllers
 
         #region HttpPost
         [HttpPost]
-        public ActionResult<PlatformReadDto> CreatePlatform(PlatformCreateDto platformCreateDto)
+        public async Task<ActionResult<PlatformReadDto>> CreatePlatform(PlatformCreateDto platformCreateDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
@@ -54,6 +60,14 @@ namespace PlatformService.Controllers
             _platformRepository.SaveChanges();
 
             PlatformReadDto platformReadDto = _mapper.Map<PlatformReadDto>(platformModel);
+            try
+            {
+                await _commandDataClient.SendPlatformToCommand(platformReadDto);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"--> Could not send Synchronously: {ex.Message}");
+            }
             return CreatedAtRoute(nameof(GetPlatformById), new { Id = platformReadDto.Id }, platformReadDto);
         }
         #endregion

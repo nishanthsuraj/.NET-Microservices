@@ -13,8 +13,8 @@ namespace CommandService.Controllers
         }
         #endregion
 
-        #region HttpGet
-        [HttpGet]
+        #region HttpPost
+        [HttpPost]
         public ActionResult TestInboundConnection()
         {
             Console.WriteLine("--> Inbound POST # Command Service");

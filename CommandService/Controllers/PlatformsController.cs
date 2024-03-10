@@ -13,6 +13,14 @@ namespace CommandService.Controllers
         }
         #endregion
 
+        #region HttpGet
+        [HttpGet]
+        public ActionResult TestMe()
+        {
+            return Ok("Hi from Command Service.");
+        }
+        #endregion
+
         #region HttpPost
         [HttpPost]
         public ActionResult TestInboundConnection()

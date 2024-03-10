@@ -5,8 +5,8 @@ namespace PlatformService.Data
 {
     internal class AppDbContext : DbContext
     {
-        #region Protected Properties
-        public DbSet<Platform> platforms { get; set; }
+        #region Public Properties
+        public DbSet<Platform> Platforms { get; set; }
         #endregion
 
         #region Construction

@@ -1,6 +1,8 @@
 
 using Microsoft.EntityFrameworkCore;
 using PlatformService.Data;
+using PlatformService.Data.Implementations;
+using PlatformService.Data.Interfaces;
 
 namespace PlatformService
 {
@@ -13,6 +15,7 @@ namespace PlatformService
             #region Developer Added Configurations
             // Add services to the container.
             builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("InMemory"));
+            builder.Services.AddScoped<IPlatformRepository, PlatformRepository>();
             #endregion
 
             builder.Services.AddControllers();

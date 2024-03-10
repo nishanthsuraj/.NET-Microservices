@@ -2,7 +2,7 @@
 
 namespace PlatformService.Data.Interfaces
 {
-    internal interface IPlatformRepository
+    public interface IPlatformRepository
     {
         void CreatePlatform(Platform platform);
 

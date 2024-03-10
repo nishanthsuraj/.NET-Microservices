@@ -2,7 +2,7 @@
 
 namespace PlatformService.Models
 {
-    internal class Platform
+    public class Platform
     {
         [Key]
         [Required]

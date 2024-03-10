@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kubernetes", "Kubernetes", "{775E3BBF-8CB0-4E0A-AC00-3874EBE4DB36}"
 	ProjectSection(SolutionItems) = preProject
 		Kubernetes\platforms-depl.yaml = Kubernetes\platforms-depl.yaml
+		Kubernetes\platforms-np-srv.yml = Kubernetes\platforms-np-srv.yml
 	EndProjectSection
 EndProject
 Global

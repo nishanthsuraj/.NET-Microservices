@@ -17,6 +17,9 @@ namespace PlatformService
             // Add services to the container.
             builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("InMemory"));
             builder.Services.AddScoped<IPlatformRepository, PlatformRepository>();
+
+            // AutoMapper
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             #endregion
 
             builder.Services.AddControllers();

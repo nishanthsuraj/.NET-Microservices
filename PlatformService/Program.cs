@@ -46,6 +46,7 @@ namespace PlatformService
 
             #region Developer Added Configurations - 2
             PrepareDatabase.Seed(app);
+            Console.WriteLine($"--> CommandService Endpoint {app.Configuration["CommandService"]}");
             #endregion
 
             app.MapControllers();

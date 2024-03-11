@@ -7,9 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlatformService", "Platform
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kubernetes", "Kubernetes", "{775E3BBF-8CB0-4E0A-AC00-3874EBE4DB36}"
 	ProjectSection(SolutionItems) = preProject
+		Kubernetes\commands-depl.yaml = Kubernetes\commands-depl.yaml
+		Kubernetes\ingress-srv.yaml = Kubernetes\ingress-srv.yaml
 		Kubernetes\platforms-depl.yaml = Kubernetes\platforms-depl.yaml
 		Kubernetes\platforms-np-srv.yml = Kubernetes\platforms-np-srv.yml
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandService", "CommandService\CommandService.csproj", "{E088A582-F8EF-4E28-A004-8259852F3114}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,10 @@ Global
 		{32AC8630-970B-4AAB-B182-0F0109A45AB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32AC8630-970B-4AAB-B182-0F0109A45AB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32AC8630-970B-4AAB-B182-0F0109A45AB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E088A582-F8EF-4E28-A004-8259852F3114}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E088A582-F8EF-4E28-A004-8259852F3114}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E088A582-F8EF-4E28-A004-8259852F3114}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E088A582-F8EF-4E28-A004-8259852F3114}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

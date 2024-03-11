@@ -4,6 +4,7 @@ using PlatformService.Data;
 using PlatformService.Data.Extensions;
 using PlatformService.Data.Implementations;
 using PlatformService.Data.Interfaces;
+using PlatformService.SyncDataServices.Http;
 
 namespace PlatformService
 {
@@ -20,6 +21,9 @@ namespace PlatformService
 
             // AutoMapper
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            // Gives HttpClient object to HttpCommandDataClient ctor. 
+            builder.Services.AddHttpClient<ICommandDataClient, HttpCommandDataClient>();
             #endregion
 
             builder.Services.AddControllers();
@@ -42,6 +46,7 @@ namespace PlatformService
 
             #region Developer Added Configurations - 2
             PrepareDatabase.Seed(app);
+            Console.WriteLine($"--> CommandService Endpoint {app.Configuration["CommandService"]}");
             #endregion
 
             app.MapControllers();

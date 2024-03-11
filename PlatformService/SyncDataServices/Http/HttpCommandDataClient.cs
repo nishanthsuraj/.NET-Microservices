@@ -35,9 +35,9 @@ namespace PlatformService.SyncDataServices.Http
             HttpResponseMessage response = await _httpClient.PostAsync(commandPlatformUrl, httpContent);
 
             if (response.IsSuccessStatusCode)
-                Console.WriteLine($"--> Sync POST to Command Service was OK! {response.Content}");
+                Console.WriteLine($"--> Sync POST to Command Service was OK! {response.StatusCode} : {response.Content} : {response.ReasonPhrase}");
             else
-                Console.WriteLine($"--> Sync POST to Command Service was NOT OK! {response.Content}");
+                Console.WriteLine($"--> Sync POST to Command Service was NOT OK! {response.StatusCode} : {response.Content} : {response.ReasonPhrase}");
         }
         #endregion
     }

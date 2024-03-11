@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  platformservice:
+    image: ${DOCKER_REGISTRY-}nishanthsuraj/platformservice
+    build:
+      context: .
+      dockerfile: PlatformService/Dockerfile
+
+  commandservice:
+    image: ${DOCKER_REGISTRY-}nishanthsuraj/commandservice
+    build:
+      context: .
+      dockerfile: CommandService/Dockerfile
+

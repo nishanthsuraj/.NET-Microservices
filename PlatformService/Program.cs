@@ -1,5 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
+using PlatformService.AsyncDataServices;
 using PlatformService.Data;
 using PlatformService.Data.Extensions;
 using PlatformService.Data.Implementations;
@@ -44,6 +45,8 @@ namespace PlatformService
 
             // Gives HttpClient object to HttpCommandDataClient ctor. 
             builder.Services.AddHttpClient<ICommandDataClient, HttpCommandDataClient>();
+            // For RabbitMQ MessageBusClient
+            builder.Services.AddSingleton<IMessageBusClient, MessageBusClient>();
             #endregion
 
             builder.Services.AddControllers();

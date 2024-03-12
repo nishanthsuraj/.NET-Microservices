@@ -10,6 +10,6 @@ spec:
     - name: platformservice
       protocol: TCP
       # Port accessible inside cluster
-      port: 8080
+      port: 80
       # Port to forward to inside the pod
-      targetPort: 8080
+      targetPort: 80

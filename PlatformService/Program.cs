@@ -10,13 +10,33 @@ namespace PlatformService
 {
     public class Program
     {
+        #region Private Constants
+        private const string PlatformsConnectionString = "Platforms";
+        private const string CommandServiceProdUrl = "CommandService";
+        #endregion
+
         public static void Main(string[] args)
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
             #region Developer Added Configurations - 1
-            // Add services to the container.
-            builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("InMemory"));
+            //// Add services to the container.
+            if (!builder.Environment.IsDevelopment())
+            {
+                builder.WebHost.ConfigureKestrel(options =>
+                {
+                    options.ListenAnyIP(80);
+                });
+
+                Console.WriteLine("--> Using SqlServer Db");
+                builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(PlatformsConnectionString)));
+            }
+            else
+            {
+                Console.WriteLine("--> Using InMemory Db");
+                builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("InMemory"));
+            }
+
             builder.Services.AddScoped<IPlatformRepository, PlatformRepository>();
 
             // AutoMapper
@@ -45,8 +65,8 @@ namespace PlatformService
             app.UseAuthorization();
 
             #region Developer Added Configurations - 2
-            PrepareDatabase.Seed(app);
-            Console.WriteLine($"--> CommandService Endpoint {app.Configuration["CommandService"]}");
+            PrepareDatabase.Seed(app, app.Environment.IsProduction());
+            Console.WriteLine($"--> CommandService Endpoint {app.Configuration[CommandServiceProdUrl]}");
             #endregion
 
             app.MapControllers();

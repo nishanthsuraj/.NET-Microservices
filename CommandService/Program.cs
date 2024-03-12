@@ -27,15 +27,10 @@ namespace CommandService
                 {
                     options.ListenAnyIP(80);
                 });
+            }
 
-                Console.WriteLine("--> Using SqlServer Db");
-                builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(CommandsConnectionString)));
-            }
-            else
-            {
-                Console.WriteLine("--> Using InMemory Db");
-                builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("InMemory"));
-            }
+            Console.WriteLine("--> Using InMemory Db");
+            builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("InMemory"));
 
             builder.Services.AddScoped<ICommandRepository, CommandRepository>();
             builder.Services.AddSingleton<IEventProcessor, EventProcessor>();
@@ -64,7 +59,7 @@ namespace CommandService
             app.UseAuthorization();
 
             #region Developer Added Configurations - 2
-            PrepareDatabase.Seed(app, app.Environment.IsProduction());
+            //PrepareDatabase.Seed(app, app.Environment.IsProduction());
             #endregion
 
             app.MapControllers();

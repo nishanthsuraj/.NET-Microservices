@@ -66,19 +66,6 @@ namespace PlatformService.Controllers
             PlatformReadDto platformReadDto = _mapper.Map<PlatformReadDto>(platformModel);
 
             // Send Sync Message
-            await SendSyncMessage(platformReadDto);
-
-            // Send Async Message
-            PlatformPublishedDto platformPublishedDto = _mapper.Map<PlatformPublishedDto>(platformReadDto);
-            SendAsyncMessage(platformPublishedDto);
-
-            return CreatedAtRoute(nameof(GetPlatformById), new { Id = platformReadDto.Id }, platformReadDto);
-        }
-        #endregion
-
-        #region Private Methods
-        public async Task SendSyncMessage(PlatformReadDto platformReadDto)
-        {
             try
             {
                 await _commandDataClient.SendPlatformToCommand(platformReadDto);
@@ -87,10 +74,9 @@ namespace PlatformService.Controllers
             {
                 Console.WriteLine($"--> Could not send Synchronously: {ex.Message}");
             }
-        }
 
-        public void SendAsyncMessage(PlatformPublishedDto platformPublishedDto)
-        {
+            // Send Async Message
+            PlatformPublishedDto platformPublishedDto = _mapper.Map<PlatformPublishedDto>(platformReadDto);
             try
             {
                 platformPublishedDto.Event = "Platform_Published";
@@ -100,6 +86,8 @@ namespace PlatformService.Controllers
             {
                 Console.WriteLine($"--> Could not send Asynchronously: {ex.Message}");
             }
+
+            return CreatedAtRoute(nameof(GetPlatformById), new { Id = platformReadDto.Id }, platformReadDto);
         }
         #endregion
     }

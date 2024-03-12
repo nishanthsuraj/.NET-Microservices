@@ -3,6 +3,7 @@ using CommandService.Data;
 using CommandService.Data.Extensions;
 using CommandService.Data.Implementations;
 using CommandService.Data.Interfaces;
+using CommandService.EventProcessing;
 using Microsoft.EntityFrameworkCore;
 
 namespace CommandService
@@ -36,6 +37,7 @@ namespace CommandService
             }
 
             builder.Services.AddScoped<ICommandRepository, CommandRepository>();
+            builder.Services.AddSingleton<IEventProcessor, EventProcessor>();
 
             // AutoMapper
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

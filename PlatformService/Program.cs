@@ -15,6 +15,11 @@ namespace PlatformService
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
             #region Developer Added Configurations - 1
+            builder.WebHost.ConfigureKestrel(options =>
+            {
+                options.ListenAnyIP(80);
+            });
+
             // Add services to the container.
             builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("InMemory"));
             builder.Services.AddScoped<IPlatformRepository, PlatformRepository>();

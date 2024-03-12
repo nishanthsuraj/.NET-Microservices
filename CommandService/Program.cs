@@ -1,4 +1,5 @@
 
+using CommandService.AsyncDataServices;
 using CommandService.Data;
 using CommandService.Data.Extensions;
 using CommandService.Data.Implementations;
@@ -38,6 +39,7 @@ namespace CommandService
 
             builder.Services.AddScoped<ICommandRepository, CommandRepository>();
             builder.Services.AddSingleton<IEventProcessor, EventProcessor>();
+            builder.Services.AddHostedService<MessageBusSubscriber>();
 
             // AutoMapper
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

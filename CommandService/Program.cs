@@ -1,19 +1,44 @@
 
+using CommandService.Data;
+using CommandService.Data.Extensions;
+using CommandService.Data.Implementations;
+using CommandService.Data.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
 namespace CommandService
 {
     public class Program
     {
+        #region Private Constants
+        private const string CommandsConnectionString = "Commands";
+        #endregion
+
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             #region Developer Added Configurations - 1
-            builder.WebHost.ConfigureKestrel(options =>
+            //// Add services to the container.
+            if (!builder.Environment.IsDevelopment())
             {
-                options.ListenAnyIP(80);
-            });
+                builder.WebHost.ConfigureKestrel(options =>
+                {
+                    options.ListenAnyIP(80);
+                });
 
-            // Add services to the container.
+                Console.WriteLine("--> Using SqlServer Db");
+                builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(CommandsConnectionString)));
+            }
+            else
+            {
+                Console.WriteLine("--> Using InMemory Db");
+                builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("InMemory"));
+            }
+
+            builder.Services.AddScoped<ICommandRepository, CommandRepository>();
+
+            // AutoMapper
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             #endregion
 
             builder.Services.AddControllers();
@@ -34,6 +59,9 @@ namespace CommandService
 
             app.UseAuthorization();
 
+            #region Developer Added Configurations - 2
+            PrepareDatabase.Seed(app, app.Environment.IsProduction());
+            #endregion
 
             app.MapControllers();
 

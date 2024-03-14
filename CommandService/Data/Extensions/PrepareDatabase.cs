@@ -1,30 +1,28 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CommandService.Data.Interfaces;
+using CommandService.Models;
+using CommandService.SyncDataServices.Grpc;
 
 namespace CommandService.Data.Extensions
 {
     public static class PrepareDatabase
     {
-        public static void Seed(IApplicationBuilder builder, bool isProd)
+        public static void Seed(IApplicationBuilder builder)
         {
             using IServiceScope serviceScope = builder.ApplicationServices.CreateScope();
-            AppDbContext? context = serviceScope.ServiceProvider.GetService<AppDbContext>();
-
-            if (isProd)
-            {
-                Console.WriteLine("--> Attempting to apply migrations...");
-                try
-                {
-                    context.Database.Migrate();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"--> Could not run migrations: {ex.Message}");
-                }
-            }
-
+            IPlatformDataClient? grpcClient = serviceScope.ServiceProvider.GetService<IPlatformDataClient>();
+            IEnumerable<Platform> platforms = grpcClient.ReturnAllPlatforms();
+            ICommandRepository commandRepository = serviceScope.ServiceProvider.GetService<ICommandRepository>();
 
             Console.WriteLine("Seeding new platforms...");
 
+            foreach (Platform platform in platforms)
+            {
+                if (!commandRepository.ExternalPlatformExists(platform.ExternalID))
+                {
+                    commandRepository.CreatePlatform(platform);
+                }
+                commandRepository.SaveChanges();
+            }
         }
     }
 }

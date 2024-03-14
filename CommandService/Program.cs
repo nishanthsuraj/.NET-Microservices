@@ -63,7 +63,7 @@ namespace CommandService
             app.UseAuthorization();
 
             #region Developer Added Configurations - 2
-            //PrepareDatabase.Seed(app, app.Environment.IsProduction());
+            PrepareDatabase.Seed(app);
             #endregion
 
             app.MapControllers();

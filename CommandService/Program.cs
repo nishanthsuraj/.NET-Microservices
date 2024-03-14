@@ -5,6 +5,7 @@ using CommandService.Data.Extensions;
 using CommandService.Data.Implementations;
 using CommandService.Data.Interfaces;
 using CommandService.EventProcessing;
+using CommandService.SyncDataServices.Grpc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CommandService
@@ -35,6 +36,9 @@ namespace CommandService
             builder.Services.AddScoped<ICommandRepository, CommandRepository>();
             builder.Services.AddSingleton<IEventProcessor, EventProcessor>();
             builder.Services.AddHostedService<MessageBusSubscriber>();
+
+            // gRPC
+            builder.Services.AddScoped<IPlatformDataClient, PlatformDataClient>();
 
             // AutoMapper
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

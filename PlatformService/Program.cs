@@ -5,6 +5,7 @@ using PlatformService.Data;
 using PlatformService.Data.Extensions;
 using PlatformService.Data.Implementations;
 using PlatformService.Data.Interfaces;
+using PlatformService.SyncDataServices.Grpc;
 using PlatformService.SyncDataServices.Http;
 
 namespace PlatformService
@@ -47,6 +48,7 @@ namespace PlatformService
             builder.Services.AddHttpClient<ICommandDataClient, HttpCommandDataClient>();
             // For RabbitMQ MessageBusClient
             builder.Services.AddSingleton<IMessageBusClient, MessageBusClient>();
+            builder.Services.AddGrpc();
             #endregion
 
             builder.Services.AddControllers();
@@ -70,6 +72,11 @@ namespace PlatformService
             #region Developer Added Configurations - 2
             PrepareDatabase.Seed(app, app.Environment.IsProduction());
             Console.WriteLine($"--> CommandService Endpoint {app.Configuration[CommandServiceProdUrl]}");
+            app.MapGrpcService<GrpcPlatformService>();
+            app.MapGet("/Protos/platforms.proto", async context =>
+            {
+                await context.Response.WriteAsync(File.ReadAllText("Protos/platforms.proto"));
+            });
             #endregion
 
             app.MapControllers();

@@ -1,8 +1,11 @@
 
+using CommandService.AsyncDataServices;
 using CommandService.Data;
 using CommandService.Data.Extensions;
 using CommandService.Data.Implementations;
 using CommandService.Data.Interfaces;
+using CommandService.EventProcessing;
+using CommandService.SyncDataServices.Grpc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CommandService
@@ -25,17 +28,17 @@ namespace CommandService
                 {
                     options.ListenAnyIP(80);
                 });
+            }
 
-                Console.WriteLine("--> Using SqlServer Db");
-                builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(CommandsConnectionString)));
-            }
-            else
-            {
-                Console.WriteLine("--> Using InMemory Db");
-                builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("InMemory"));
-            }
+            Console.WriteLine("--> Using InMemory Db");
+            builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("InMemory"));
 
             builder.Services.AddScoped<ICommandRepository, CommandRepository>();
+            builder.Services.AddSingleton<IEventProcessor, EventProcessor>();
+            builder.Services.AddHostedService<MessageBusSubscriber>();
+
+            // gRPC
+            builder.Services.AddScoped<IPlatformDataClient, PlatformDataClient>();
 
             // AutoMapper
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -60,7 +63,7 @@ namespace CommandService
             app.UseAuthorization();
 
             #region Developer Added Configurations - 2
-            PrepareDatabase.Seed(app, app.Environment.IsProduction());
+            PrepareDatabase.Seed(app);
             #endregion
 
             app.MapControllers();
